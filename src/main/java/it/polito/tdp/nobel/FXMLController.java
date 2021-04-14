@@ -16,7 +16,7 @@ import javafx.scene.control.TextField;
 public class FXMLController {
 
 	Model model;
-	
+	//i
     @FXML
     private ResourceBundle resources;
 
