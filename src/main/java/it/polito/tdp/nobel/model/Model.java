@@ -26,13 +26,14 @@ public class Model {
 		this.soluzioneMigliore = new HashSet<Esame>();
 		this.mediaSoluzioneMigliore = 0;
 		
-		cerca(parziale, 0, numeroCrediti);
+		//cercaBrutto(parziale, 0, numeroCrediti);
+		cercaBello(parziale, 0, numeroCrediti);
 		
 		return soluzioneMigliore;	
 	}
 
 	//complessita: N!
-	private void cerca(Set<Esame> parziale, int L, int m) {
+	private void cercaBrutto(Set<Esame> parziale, int L, int m) {
 
 		//casi terminali
 		//controllo i crediti
@@ -60,11 +61,43 @@ public class Model {
 		for(Esame e : partenza) {
 			if(!parziale.contains(e)) {
 				parziale.add(e);
-				cerca(parziale, L+1, m);
+				cercaBrutto(parziale, L+1, m);
 				parziale.remove(e);  //backtracking
 				
 			}
 		}
+	}
+	
+	//complessità: 2^N (quindi anche lui esponenziale ma migliore di N!, comunque anhe lui con numeri alti è lento)
+	private void cercaBello(Set<Esame> parziale, int L, int m) {
+		//casi terminali
+			//controllo i crediti
+			int crediti = this.sommaCrediti(parziale);
+			if(crediti>m) {
+				return;
+			}
+				
+			if(crediti==m) {
+				double media = this.calcolaMedia(parziale);
+				if(media>this.mediaSoluzioneMigliore) {
+					this.soluzioneMigliore= new HashSet<>(parziale); //la sovrascrivo
+					this.mediaSoluzioneMigliore=media;
+				}
+					
+				return;
+			}
+			//se arrivo qua sicuramente: crediti < m e quindi posso andare avanti nella ricorsione (a meno che non siano finiti gli esami) 
+			// L = N -> non ci sono più esami da aggiungere
+			if(L==partenza.size()) {
+				return;
+			}
+			
+			//generazione sottoproblemi
+			//partenza[L] è da aggiungere oppure no? provo entrambe le cose
+			parziale.add(partenza.get(L));
+			cercaBello(parziale, L+1, m);
+			parziale.remove(partenza.get(L));
+			cercaBello(parziale, L+1, m);
 	}
 
 
