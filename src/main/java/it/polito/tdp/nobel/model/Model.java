@@ -58,14 +58,27 @@ public class Model {
 		}
 		
 		//generare i sotto-problemi
-		for(Esame e : partenza) {
+		/*for(Esame e : partenza) {
 			if(!parziale.contains(e)) {
 				parziale.add(e);
 				cercaBrutto(parziale, L+1, m);
 				parziale.remove(e);  //backtracking
 				
 			}
-		}
+		}*/
+		
+		//N.B.: Non è ancora "perfetto": il controllo i>=L non è sufficiente ad evitare tutti i casi duplicati
+			for(int i = 0; i < partenza.size(); i ++) {
+			
+				if(!parziale.contains(partenza.get(i)) && i >= L) {
+					parziale.add(partenza.get(i));
+					cercaBrutto(parziale, L+1, m);
+					parziale.remove(partenza.get(i));
+				}
+					
+			}
+		
+		
 	}
 	
 	//complessità: 2^N (quindi anche lui esponenziale ma migliore di N!, comunque anhe lui con numeri alti è lento)
